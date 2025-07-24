@@ -35,7 +35,7 @@ class User {
       $stmt->execute([$username]);
       return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
-  
+
  public function authenticate($username, $password) {
     $username = strtolower($username);
     $db = db_connect();
