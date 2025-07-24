@@ -20,4 +20,15 @@ class Movie {
         return json_decode($response, true);
     }
 
+    public static function saveRating($movie_id, $user_id, $rating) {
+        global $pdo;
+        $stmt = $pdo->prepare("INSERT INTO ratings (movie_id, user_id, rating) VALUES (?, ?, ?)");
+        return $stmt->execute([$movie_id, $user_id, $rating]);
+    }
+
+    public static function saveReview($movie_id, $review) {
+        global $pdo;
+        $stmt = $pdo->prepare("INSERT INTO reviews (movie_id, review) VALUES (?, ?)");
+        return $stmt->execute([$movie_id, $review]);
+    }
 }
