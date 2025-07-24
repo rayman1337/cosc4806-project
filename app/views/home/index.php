@@ -1,4 +1,4 @@
-<?php require_once 'app/views/templates/header.php' ?>
+<?php require_once 'app/views/templates/headerPublic.php' ?>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
