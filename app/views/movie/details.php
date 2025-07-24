@@ -26,8 +26,7 @@
     <p>You must be <a href="/login">logged in</a> to rate this movie.</p>
 <?php endif; ?>
 
-<h3>AI-generated Review:</h3>
-<p><?php echo htmlspecialchars($aiReview); ?></p>  
+
 
 <a href="/">Back to Home</a>
 

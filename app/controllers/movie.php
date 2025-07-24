@@ -17,11 +17,8 @@ class Movie extends Controller {
         $movieData = $this->movieModel->fetchMovieFromOmdb($_GET['title']);
 
         if ($movieData && isset($movieData['Response']) && $movieData['Response'] === "True") {
-            $aiReview = "AI review coming soon..."; 
-
             $this->view('movie/details', [
                 'movieData' => $movieData,
-                'aiReview' => $aiReview
             ]);  
         } else {
             echo 'Movie not found or API error';  
