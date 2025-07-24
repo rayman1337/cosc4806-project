@@ -23,7 +23,7 @@
                         <div class="text-center">
                             <p>You are not logged in.</p>
                             <a href="/login" class="btn btn-primary me-2">Login</a>
-                            <a href="/register" class="btn btn-outline-primary">Register</a>
+                            <a href="/create" class="btn btn-outline-primary">Register</a>
                         </div>
                     <?php endif; ?>
                 </div>
