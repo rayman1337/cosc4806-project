@@ -1,13 +1,5 @@
 <?php require_once 'app/views/templates/headerPublic.php'; ?>
 
-<h1>Movie Data (Raw)</h1>
-
-<pre>
-<?php 
-    print_r($movieData);  // This will print the raw movie data array
-?>
-</pre>
-
 <h1><?php echo htmlspecialchars($movieData['Title']); ?></h1>
 <p><strong>Year:</strong> <?php echo htmlspecialchars($movieData['Year']); ?></p>
 <p><strong>Genre:</strong> <?php echo htmlspecialchars($movieData['Genre']); ?></p>

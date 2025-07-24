@@ -10,13 +10,11 @@ class Movie extends Controller {
     }
 
     public function search() {
-        echo 'Search Function Called';  
-
         if (!isset($_GET['title']) || empty($_GET['title'])) {
             echo 'No title provided';
             return;
         }
-        $movieData = $this->movieModel->fetchMovieFromOmdb($title);
+        $movieData = $this->movieModel->fetchMovieFromOmdb($_GET['title']);
 
         if ($movieData && isset($movieData['Response']) && $movieData['Response'] === "True") {
             $this->view('movie/details', ['movieData' => $movieData]);  

@@ -18,7 +18,7 @@ class MovieModel {
         $url = "https://www.omdbapi.com/?t=" . urlencode($title) . "&apikey=" . $apiKey;
 
         $response = file_get_contents($url);
-
+        
         if ($response === FALSE) {
             echo "Error: Could not fetch movie data from OMDB.";
             return [];
