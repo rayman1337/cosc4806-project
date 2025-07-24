@@ -1,33 +1,71 @@
 <?php require_once 'app/views/templates/headerPublic.php'; ?>
 
-<h1><?php echo htmlspecialchars($movieData['Title']); ?></h1>
-<p><strong>Year:</strong> <?php echo htmlspecialchars($movieData['Year']); ?></p>
-<p><strong>Genre:</strong> <?php echo htmlspecialchars($movieData['Genre']); ?></p>
-<p><strong>IMDB Rating:</strong> <?php echo htmlspecialchars($movieData['imdbRating']); ?></p>
-<p><strong>Metascore:</strong> <?php echo htmlspecialchars($movieData['Metascore']); ?></p>
-<p><strong>Description:</strong> <?php echo htmlspecialchars($movieData['Plot']); ?></p>
+<div class="container mt-5">
+    <?php if (isset($data['movie'])): ?>
+        <div class="row">
+            <div class="col-md-3">
+                <?php if (!empty($movie['Poster']) && $movie['Poster'] != 'N/A'): ?>
+                    <img src="<?php echo htmlspecialchars($movie['Poster']); ?>" class="img-fluid rounded" alt="Movie Poster">
+                <?php endif; ?>
+            </div>
+            <div class="col-md-9">
+                <h1><?php echo htmlspecialchars($movie['Title']); ?> (<?php echo htmlspecialchars($movie['Year']); ?>)</h1>
+                <p><strong>Year:</strong> <?php echo htmlspecialchars($movie['Year']); ?></p>
+                <p><strong>Genre:</strong> <?php echo htmlspecialchars($movie['Genre']); ?></p>
+                <p><strong>IMDB Rating:</strong> <?php echo htmlspecialchars($movie['imdbRating']); ?></p>
+                <p><strong>Metascore:</strong> <?php echo htmlspecialchars($movie['Metascore']); ?></p>
+                <p><strong>Description:</strong> <?php echo htmlspecialchars($movie['Plot']); ?></p>
 
-<?php if (isset($_SESSION['auth'])): ?>
-    <h3>Rate this movie:</h3>
-    <form action="/movie/rateMovie" method="POST">
-        <input type="hidden" name="movie_id" value="<?php echo htmlspecialchars($movieData['imdbID']); ?>">
-         <input type="hidden" name="movie_name" value="<?php echo htmlspecialchars($movieData['Title']); ?>">
-        <label for="rating">Rating (1 to 5):</label>
-        <select name="rating" required>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-        </select>
-        <button type="submit">Submit Rating</button>
-    </form>
-<?php else: ?>
-    <p>You must be <a href="/login">logged in</a> to rate this movie.</p>
-<?php endif; ?>
+                <?php if ($isAuthenticated): ?>
+                    <?php if (isset($averageRating) && $averageRating !== null): ?>
+                        <p>This movie is rated <?php echo round($averageRating, 1); ?>/5 by the users of our website.</p>
+                    <?php else: ?>
+                        <p>This movie has no ratings yet.</p>
+                    <?php endif; ?>
 
+                    <?php if (isset($userRating) && $userRating !== null): ?>
+                        <div class="alert alert-info" role="alert">
+                            You rated this movie <?php echo htmlspecialchars($userRating); ?>/5.
+                        </div>
+                    <?php endif; ?>
 
+                    <h3>Rate this movie:</h3>
+                    <form action="/movie/rateMovie" method="POST">
+                        <input type="hidden" name="movie_id" value="<?php echo htmlspecialchars($movie['imdbID']); ?>">
+                        <input type="hidden" name="movie_name" value="<?php echo htmlspecialchars($movie['Title']); ?>">
+                        <input type="hidden" name="query" value="<?php echo htmlspecialchars($query ?? ''); ?>">
+                        <label for="rating">Rating (1 to 5):</label>
+                        <select name="rating" required>
+                            <option value="1" <?php echo ($userRating == 1) ? 'selected' : ''; ?>>1</option>
+                            <option value="2" <?php echo ($userRating == 2) ? 'selected' : ''; ?>>2</option>
+                            <option value="3" <?php echo ($userRating == 3) ? 'selected' : ''; ?>>3</option>
+                            <option value="4" <?php echo ($userRating == 4) ? 'selected' : ''; ?>>4</option>
+                            <option value="5" <?php echo ($userRating == 5) ? 'selected' : ''; ?>>5</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Submit Rating</button>
+                    </form>
+                <?php else: ?>
+                    <p>You must be <a href="/login">logged in</a> to rate this movie.</p>
+                <?php endif; ?>
 
-<a href="/">Back to Home</a>
+                <h3>AI-generated Review:</h3>
+                <p><?php echo htmlspecialchars($aiReview); ?></p>
+            </div>
+        </div>
+    <?php else: ?>
+        <div class="alert alert-danger" role="alert">
+            No movie found. Please search again.
+            <div class="mt-2">
+                <a href="/home" class="btn btn-primary">Go Back to Search</a>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>
+
+<script>
+    function updateRatingValue(value) {
+        document.getElementById('ratingValue').innerText = value;
+    }
+</script>
 
 <?php require_once 'app/views/templates/footer.php'; ?>
