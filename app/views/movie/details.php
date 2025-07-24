@@ -9,8 +9,9 @@
 
 <?php if (isset($_SESSION['auth'])): ?>
     <h3>Rate this movie:</h3>
-    <form action="/movie/rate" method="POST">
+    <form action="/movie/rateMovie" method="POST">
         <input type="hidden" name="movie_id" value="<?php echo htmlspecialchars($movieData['imdbID']); ?>">
+         <input type="hidden" name="movie_name" value="<?php echo htmlspecialchars($movieData['Title']); ?>">
         <label for="rating">Rating (1 to 5):</label>
         <select name="rating" required>
             <option value="1">1</option>

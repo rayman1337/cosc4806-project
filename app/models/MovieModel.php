@@ -1,17 +1,5 @@
 <?php
 class MovieModel {
-    public function getMovieByImdb($imdb_id) { 
-        $db = db_connect();
-        $stmt = $db->prepare("SELECT * FROM movies WHERE imdb_id = ?");
-        $stmt->execute([$imdb_id]);
-        return $stmt->fetch();
-    }
-
-    public function saveMovie($data) {
-        $db = db_connect();
-        $stmt = $db->prepare("INSERT INTO movies (title, year, genre, imdb_id, metascore, imdb_rating, description) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        return $stmt->execute([$data['title'], $data['year'], $data['genre'], $data['imdb_id'], $data['metascore'], $data['imdb_rating'], $data['description']]);
-    }
 
     public function fetchMovieFromOmdb($title) {
         $apiKey = getenv('OMDB_API_KEY'); 
@@ -34,16 +22,32 @@ class MovieModel {
         return $movieData;
     }
 
-
-    public function saveRating($movie_id, $user_id, $rating) { 
+    public function saveRating($movie_id, $movie_name, $user_id, $rating) {
         $db = db_connect();
-        $stmt = $db->prepare("INSERT INTO ratings (movie_id, user_id, rating) VALUES (?, ?, ?)");
-        return $stmt->execute([$movie_id, $user_id, $rating]);
-    }
 
-    public function saveReview($movie_id, $review) { 
-        $db = db_connect();
-        $stmt = $db->prepare("INSERT INTO reviews (movie_id, review) VALUES (?, ?)");
-        return $stmt->execute([$movie_id, $review]);
+        if (!$db) {
+            die("Database connection failed.");
+        }
+
+        $stmt = $db->prepare("SELECT * FROM ratings WHERE user_id = :user_id AND imdb_id = :imdb_id");
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':imdb_id', $movie_id, PDO::PARAM_STR);
+        $stmt->execute();
+        $existingRating = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($existingRating) {
+            $stmt = $db->prepare("UPDATE ratings SET rating = :rating WHERE user_id = :user_id AND imdb_id = :imdb_id");
+            $stmt->bindValue(':rating', $rating, PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->bindValue(':imdb_id', $movie_id, PDO::PARAM_STR);
+        } else {
+            $stmt = $db->prepare("INSERT INTO ratings (movie_name, imdb_id, user_id, rating) VALUES (:movie_name, :imdb_id, :user_id, :rating)");
+            $stmt->bindValue(':movie_name', $movie_name);
+            $stmt->bindValue(':imdb_id', $movie_id);
+            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->bindValue(':rating', $rating, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
     }
 }
