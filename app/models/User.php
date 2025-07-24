@@ -14,7 +14,6 @@ class User {
             $_SESSION['auth'] = 1;
             $_SESSION['username'] = ucwords($username);  
             $_SESSION['user_id'] = $user['id'];
-            $_SESSION['is_admin'] = $user['is_admin']; 
 
             header('Location: /home');  
             exit;

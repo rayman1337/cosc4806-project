@@ -26,7 +26,7 @@
 <?php endif; ?>
 
 <h3>AI-generated Review:</h3>
-<p><?php echo htmlspecialchars($aiReview); ?></p>  <!-- Display AI review here -->
+<p><?php echo htmlspecialchars($aiReview); ?></p>  
 
 <a href="/">Back to Home</a>
 

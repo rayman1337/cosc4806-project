@@ -1,10 +1,3 @@
-    <?php
-    if (!empty($_SESSION['auth'])) {
-        header('Location: /home');
-        exit;
-    }
-    ?>
-
     <!DOCTYPE html>
     <html lang="en">
     <head>
