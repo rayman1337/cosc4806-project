@@ -3,16 +3,8 @@
 class Home extends Controller {
 
     public function index() {
-        if (!isset($_SESSION['auth']) || $_SESSION['auth'] !== 1) {
-            $_SESSION['error'] = "You must be logged in to view the home page.";
-            header("Location: /login");
-            exit;
-        }
+        $isLoggedIn = isset($_SESSION['auth']) && $_SESSION['auth'] === 1;
 
-        $user = $this->model('User');
-        $data = $user->test();
-
-        $this->view('home/index');
-        exit;
+        $this->view('home/index', ['isLoggedIn' => $isLoggedIn]);
     }
 }
