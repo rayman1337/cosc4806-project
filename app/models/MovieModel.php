@@ -1,6 +1,22 @@
 <?php
 class MovieModel {
 
+    public function fetchMovieFromOmdbById($movie_id) {
+        $apiKey = getenv('OMDB_API_KEY');
+        $url = "https://www.omdbapi.com/?i=" . urlencode($movie_id) . "&apikey=" . $apiKey;
+
+        $response = file_get_contents($url);
+
+        if ($response === FALSE) {
+            echo "Error: Could not fetch movie data from OMDB.";
+            return [];
+        }
+
+        $movieData = json_decode($response, true);
+
+        return $movieData;
+    }
+    
     public function fetchMovieFromOmdb($title) {
         $apiKey = getenv('OMDB_API_KEY');
         $url = "https://www.omdbapi.com/?t=" . urlencode($title) . "&apikey=" . $apiKey;

@@ -12,14 +12,17 @@ class Movie extends Controller {
     public function search() {
         if (isset($_GET['title']) && !empty($_GET['title'])) {
             $title = $_GET['title'];
-
-            $movieData = $this->movieModel->fetchMovieFromOmdb($title);
+            $showSuccessMessage = isset($_GET['action']) && $_GET['action'] === 'rating_completed';
+            
+            if ($showSuccessMessage && isset($_GET['movie_id'])) {
+                $movieData = $this->movieModel->fetchMovieFromOmdbById($_GET['movie_id']);
+            } else {
+                $movieData = $this->movieModel->fetchMovieFromOmdb($title);
+            }
             
             if ($movieData && isset($movieData['Response']) && $movieData['Response'] === "True") {
                 $averageRating = $this->movieModel->getMovieRatings($movieData['imdbID']);
                 $userRating = isset($_SESSION['user_id']) ? $this->movieModel->getUserRating($_SESSION['user_id'], $movieData['imdbID']) : null;
-                $showSuccessMessage = isset($_GET['action']) && $_GET['action'] === 'rateing_completed';
-                echo $showSuccessMessage;
 
                 $data = [
                     'movie' => $movieData,
@@ -47,7 +50,9 @@ class Movie extends Controller {
             $user_id = $_SESSION['user_id'];
 
             $this->movieModel->saveRating($user_id, $movie_name, $movie_id, $rating);
-            header("Location: /movie/search?title=" . urlencode($movie_name) . "&action=rating_completed");
+
+            header("Location: /movie/search?title=" . urlencode($movie_name) . "&action=rating_completed&movie_id=" . urlencode($movie_id));
+            
             exit();
         } else {
             echo "You must be logged in to rate movies.";
