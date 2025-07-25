@@ -65,14 +65,14 @@ class Movie extends Controller {
             return;
         }
 
-         $movie_name = $_POST['query'];
+         $movie_name = $_POST['imdb_id'];
         
         if (!isset($movie_name)) {
             echo 'No movie title provided';
             return;
         }
 
-        $movieData = $this->movieModel->fetchMovieFromOmdb($movie_name);
+        $movieData = $this->movieModel->fetchMovieFromOmdbById($movie_name);
 
         if ($movieData && isset($movieData['Response']) && $movieData['Response'] === "True") {
             $averageRating = $this->movieModel->getMovieRatings($movieData['imdbID']);
