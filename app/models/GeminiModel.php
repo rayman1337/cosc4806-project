@@ -1,10 +1,8 @@
 <?php
-
 class GeminiModel {
-
     public static function ask($prompt) {
         $apiKey = getenv('GEMINI_API_KEY');
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" . $apiKey;
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $apiKey;
 
         $data = [
             'contents' => [

@@ -2,9 +2,11 @@
 
 class Movie extends Controller {
     private $movieModel;
+    private $geminiModel;
 
     public function __construct() {
         $this->movieModel = $this->model('MovieModel');
+        $this->geminiModel = $this->model('GeminiModel');
     }
 
     public function search() {
@@ -70,19 +72,12 @@ class Movie extends Controller {
             $averageRating = $this->movieModel->getMovieRatings($movieData['imdbID']);
             $averageRatingNumericalValue = $averageRating ? $averageRating['averageRating'] : null;
 
-            echo 'Building Prompt';
-            echo $averageRatingNumericalValue;
             
             $prompt = $averageRatingNumericalValue ? 
             "Please give a review for " . $movieData['Title'] . " that has an average rating of " . round($averageRatingNumericalValue, 1) . " out of 5." :
             "Please give a review for " . $movieData['Title'];
 
-            echo $prompt;
-            echo 'About to ask Gemini';
-
-            $response = GeminiModel::ask($prompt);
-
-            echo $response;
+            $response = $this->geminiModel->ask($prompt);
 
             $data = [
                 'aiReview' => $response,
