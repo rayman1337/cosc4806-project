@@ -51,7 +51,52 @@ class Movie extends Controller {
         }
     }
 
-    public function generateReview($movie_id) {
-        return "Review feature coming soon.";
+    public function generateReview() {
+        if (!isset($_SESSION['auth'])) {
+            echo 'You must be logged in to generate a review.';
+            return;
+        }
+
+         $movie_name = $_POST['query'];
+        
+        if (!isset($movie_name)) {
+            echo 'No movie title provided';
+            return;
+        }
+
+        $movieData = $this->movieModel->fetchMovieFromOmdb($movie_name);
+
+        if ($movieData && isset($movieData['Response']) && $movieData['Response'] === "True") {
+            $averageRating = $this->movieModel->getMovieRatings($movieData['imdbID']);
+            $averageRatingNumericalValue = $averageRating ? $averageRating['averageRating'] : null;
+
+            echo 'Building Prompt';
+            echo $averageRatingNumericalValue;
+            
+            $prompt = $averageRatingNumericalValue ? 
+            "Please give a review for " . $movieData['Title'] . " that has an average rating of " . round($averageRatingNumericalValue, 1) . " out of 5." :
+            "Please give a review for " . $movieData['Title'];
+
+            echo $prompt;
+            echo 'About to ask Gemini';
+
+            $response = GeminiModel::ask($prompt);
+
+            echo $response;
+
+            $data = [
+                'aiReview' => $response,
+                'movie' => $movieData,
+                'averageRating' => $averageRating ? $averageRating['averageRating'] : null,
+                'userRating' => $userRating ? $userRating['rating'] : null,
+                'isAuthenticated' => isset($_SESSION['auth']) && $_SESSION['auth'] == 1,
+                'query' => $movie_id, 
+            ];
+
+            $this->view('movie/details', $data);
+        } else {
+            echo 'Movie not found or API error';
+        }
     }
+
 }
