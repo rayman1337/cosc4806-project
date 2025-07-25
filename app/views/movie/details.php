@@ -49,7 +49,24 @@
                 <?php endif; ?>
 
                 <h3>AI-generated Review:</h3>
-                <p><?php echo htmlspecialchars($aiReview); ?></p>
+                <?php if ($isAuthenticated): ?>
+                    <form action="/movie/generateReview" method="post">
+                        <input type="hidden" name="imdb_id" value="<?php echo htmlspecialchars($movie['imdbID'] ?? ''); ?>">
+                        <input type="hidden" name="query" value="<?php echo htmlspecialchars($query ?? ''); ?>">
+                        <button type="submit" class="btn btn-secondary mt-2">Get AI Review</button>
+                    </form>
+                <?php else: ?>
+                    <p>You must be logged in to get an AI-generated review.</p>
+                <?php endif; ?>
+                <?php if (isset($aiReview)): ?>
+                    <h4>Generated Review:</h4>
+                    <div class="card bg-light mb-3">
+                        <div class="card-header">AI Review</div>
+                        <div class="card-body">
+                            <p class="card-text"><?php echo nl2br(htmlspecialchars($aiReview)); ?></p>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     <?php else: ?>
