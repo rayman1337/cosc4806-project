@@ -46,7 +46,7 @@ class Movie extends Controller {
             $this->movieModel->saveRating($user_id, $movie_name, $movie_id, $rating);
 
 
-            header("Location: /movie/search?title=" . urlencode($movie_name) . "&");
+            header("Location: /movie/search?title=" . urlencode($movie_name) . "&action=rateing_completed");
             exit();
         } else {
             echo "You must be logged in to rate movies.";

@@ -53,7 +53,7 @@
                     <form action="/movie/generateReview" method="post">
                         <input type="hidden" name="imdb_id" value="<?php echo htmlspecialchars($movie['imdbID'] ?? ''); ?>">
                         <input type="hidden" name="query" value="<?php echo htmlspecialchars($query ?? ''); ?>">
-                        <button type="submit" class="btn btn-secondary mt-2">Get AI Review</button>
+                        <button type="submit" class="btn btn-primary">Get AI Review</button>
                     </form>
                 <?php else: ?>
                     <p>You must be logged in to get an AI-generated review.</p>
