@@ -61,7 +61,8 @@
                     <form action="/movie/generateReview" method="post">
                         <input type="hidden" name="imdb_id" value="<?php echo htmlspecialchars($movie['imdbID'] ?? ''); ?>">
                         <input type="hidden" name="query" value="<?php echo htmlspecialchars($query ?? ''); ?>">
-                        <button type="submit" class="btn btn-primary" onclick="this.disabled=true; this.innerHTML='<span class=\'spinner-border spinner-border-sm me-2\'></span>Generating Review...'; this.classList.add('btn-secondary'); this.classList.remove('btn-primary');">Get AI Review</button>
+                        <button type="submit" class="btn btn-primary">Get AI Review</button>
+
                         
                     </form>
                 <?php else: ?>
