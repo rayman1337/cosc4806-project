@@ -18,6 +18,8 @@ class Movie extends Controller {
             if ($movieData && isset($movieData['Response']) && $movieData['Response'] === "True") {
                 $averageRating = $this->movieModel->getMovieRatings($movieData['imdbID']);
                 $userRating = isset($_SESSION['user_id']) ? $this->movieModel->getUserRating($_SESSION['user_id'], $movieData['imdbID']) : null;
+                $showSuccessMessage = isset($_GET['action']) && $_GET['action'] === 'rateing_completed';
+                echo $showSuccessMessage;
 
                 $data = [
                     'movie' => $movieData,
@@ -25,6 +27,7 @@ class Movie extends Controller {
                     'userRating' => $userRating ? $userRating['rating'] : null,
                     'isAuthenticated' => isset($_SESSION['auth']) && $_SESSION['auth'] == 1,
                     'query' => $title,
+                    'showSuccessMessage' => $showSuccessMessage
                 ];
 
                 $this->view('movie/details', $data);
@@ -44,9 +47,7 @@ class Movie extends Controller {
             $user_id = $_SESSION['user_id'];
 
             $this->movieModel->saveRating($user_id, $movie_name, $movie_id, $rating);
-
-
-            header("Location: /movie/search?title=" . urlencode($movie_name) . "&action=rateing_completed");
+            header("Location: /movie/search?title=" . urlencode($movie_name) . "&action=rating_completed");
             exit();
         } else {
             echo "You must be logged in to rate movies.";

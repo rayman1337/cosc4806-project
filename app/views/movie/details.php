@@ -1,6 +1,14 @@
 <?php require_once 'app/views/templates/headerPublic.php'; ?>
 
 <div class="container mt-5">
+
+    <?php if (isset($showSuccessMessage) && $showSuccessMessage): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success!</strong> Your rating has been submitted successfully.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+    
     <?php if (isset($data['movie'])): ?>
         <div class="row">
             <div class="col-md-3">
